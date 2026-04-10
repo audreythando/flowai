@@ -23,7 +23,7 @@ public class ProjectsController : ControllerBase
         var result = projects.Select(project => new ProjectDto
         {
             Id = project.Id,
-            Name = project.Name
+            Name = project.Name.ToUpper()
         });
 
         return Ok(result);

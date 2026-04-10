@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using FlowAI.Api.Dtos;
+using FlowAI.Api.Services;
 
 namespace FlowAI.Api.Controllers;
 
@@ -6,25 +8,24 @@ namespace FlowAI.Api.Controllers;
 [Route("api/[controller]")]
 public class ProjectsController : ControllerBase
 {
+    private readonly IProjectService _projectService;
+
+    public ProjectsController(IProjectService projectService)
+    {
+        _projectService = projectService;
+    }
+
     [HttpGet]
     public IActionResult GetAll()
     {
-        var projects = new[]
-        {
-            new
-            {
-                Id = 1,
-                Name = "FlowAI",
-                Description = "AI workflow automation platform"
-            },
-            new
-            {
-                Id = 2,
-                Name = "Interview Prep Tracker",
-                Description = "Tracks study goals and coding progress"
-            }
-        };
+        var projects = _projectService.GetProjects();
 
-        return Ok(projects);
+        var result = projects.Select(project => new ProjectDto
+        {
+            Id = project.Id,
+            Name = project.Name
+        });
+
+        return Ok(result);
     }
 }
